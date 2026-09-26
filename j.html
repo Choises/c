@@ -728,34 +728,16 @@
     }
 
 
-       // ⚡ On-Demand Αναπαραγωγή (Διορθωμένη για MP3, MP4 και σταθερό Chat)
+           // ⚡ On-Demand Αναπαραγωγή (Με Απόλυτο Συγχρονισμό της Όρθιας Μπάρας Volume!)
     function playOnDemand(index) {
         const track = onDemandTracks[index];
         if (!track) return;
-        // 🌟 ΦΩΤΙΣΜΟΣ ENERGY: Καθαρίζει όλα τα κουμπιά και βάφει Neon αυτό που παίζει!
-        for (let i = 0; i < onDemandTracks.length; i++) {
-            const btn = document.getElementById(`playlist-item-${i}`);
-            if (btn) {
-                btn.style.background = "#1e2530";
-                btn.style.color = "#00ffcc";
-                btn.style.borderColor = "#2c3545";
-                btn.style.boxShadow = "none";
-            }
-        }
-        const activeBtn = document.getElementById(`playlist-item-${index}`);
-        if (activeBtn) {
-            activeBtn.style.background = "rgba(0, 255, 204, 0.1)";
-            activeBtn.style.color = "#39ff14";
-            activeBtn.style.borderColor = "#00ffcc";
-            activeBtn.style.boxShadow = "0 0 10px rgba(0, 255, 204, 0.4)";
-        }
 
         audio.pause(); audio.src = ""; isPlaying = false;
         playIcon.className = "fas fa-play";
         document.getElementById('song-title').innerText = track.title;
         document.getElementById('artist-name').innerText = track.artist;
 
-        // 🔥 ΚΛΕΙΔΙ: Αποσυνδέουμε πλήρως το HLS για να μπορέσει να παίξει το MP4 βίντεο!
         if (hls) { hls.detachMedia(); }
         const coverBox = document.getElementById('mp3-cover-box');
 
@@ -773,9 +755,22 @@
             videoElement.style.display = 'block';
             videoElement.src = track.fileUrl; 
             videoElement.load(); 
-            videoElement.muted = false;
+            
+            // 🔥 ΚΛΕΙΔΙ: Διαβάζουμε live τη θέση της όρθιας μπάρας πριν ξεκινήσει το βίντεο!
+            const videoVolBar = document.getElementById('video-volume-bar');
+            const currentVol = videoVolBar ? parseFloat(videoVolBar.value) : 0;
+            
+            videoElement.volume = currentVol; // Επιβάλλει την ένταση της μπάρας
+            
+            if (currentVol > 0) {
+                videoElement.muted = false;
+                document.getElementById('video-mute-icon').className = "fas fa-volume-up";
+            } else {
+                videoElement.muted = true;
+                document.getElementById('video-mute-icon').className = "fas fa-volume-mute";
+            }
+
             videoElement.play().catch(e => console.log(e));
-            document.getElementById('video-mute-icon').className = "fas fa-volume-up";
             videoElement.addEventListener('ended', returnToLiveStream, { once: true });
           }
         }
@@ -783,22 +778,10 @@
         const playlistPanel = document.getElementById('embedded-playlist');
         if (playlistPanel) playlistPanel.style.display = 'none';
 
-        // 🔓 Εξασφάλιση ότι το Chat είναι μόνιμα έτοιμο να ανοίξει πάνω από το κομμάτι!
         const chatFrame = document.getElementById('embedded-chat');
         if (chatFrame) chatFrame.style.display = 'block';
     }
 
-
-            function closePlaylistAndReturn() {
-      const playlistPanel = document.getElementById('embedded-playlist');
-      const chatFrame = document.getElementById('embedded-chat');
-      
-      if (playlistPanel) playlistPanel.style.display = 'none';
-      if (videoElement) videoElement.style.display = 'block';
-      
-      // 🔥 ΚΛΕΙΔΙ: Επαναφέρουμε την υποδομή του Chat όταν πατάμε το "Χ"
-      if (chatFrame) chatFrame.style.display = 'block';
-    }
 
         // 🌟 Καθαρισμός του Neon φωτισμού της λίστας κατά την επιστροφή στο Live
         for (let i = 0; i < onDemandTracks.length; i++) {

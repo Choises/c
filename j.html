@@ -486,6 +486,8 @@
   <audio id="audio-player"></audio>
 
   <script>
+       
+  
     const tracksData = [
       {
         title: "ᴾᵐPanagiotis🇬🇷",
@@ -833,8 +835,8 @@
           videoElement.play().catch(e => console.log(e));
         }
 
-        audio.src = tracksData.audioSrc; 
-        audio.load(); 
+         audio.src = tracksData[0].audioSrc; 
+    audio.load();
         audio.play().catch(e => console.log(e));
         playIcon.className = "fas fa-pause";
         isPlaying = true;

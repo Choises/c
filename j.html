@@ -415,9 +415,6 @@
       </div>
     </div>
 
-   
-
-
 <!-- ΤΟ ΚΡΥΦΟ ΠΛΑΙΣΙΟ ΤΟΥ CHAT ΜΕ ΑΔΕΙΑ ΜΙΚΡΟΦΩΝΟΥ 🎙️ -->
         <iframe id="embedded-chat" src="//choises.github.io/q/p" allow="microphone; microphone *" scrolling="no" style="display: block; width: 100%; height: 100%; min-height: 220px; max-height: 100%; border: none; border-radius: 10px; background: transparent; overflow: hidden; box-sizing: border-box; position: absolute; top: 0; left: 0; z-index: 3; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;"></iframe>
 
@@ -428,11 +425,12 @@
            <!-- Ο ΤΙΤΛΟΣ ΜΑΖΙ ΜΕ ΤΟ ΚΟΚΚΙΝΟ ΚΟΥΜΠΙ ΚΛΕΙΣΙΜΑΤΟΣ (X) -->
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2c3545; padding-bottom: 5px; margin-bottom: 15px;">
         <span style="color: #00ffcc; font-size: 16px; font-weight: bold;">🎵 Λίστα Τραγουδιών</span>
-        <button onclick="closePlaylistAndReturn()" style="background: #c0392b; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;">X</button>
+                <!-- 🔥 ΔΙΟΡΘΩΣΗ: Το "Χ" καλεί πλέον την closePlaylist() για να κλείνει ακαριαία! -->
+        <button onclick="closePlaylist()" style="background: #c0392b; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; position: relative; z-index: 100001; pointer-events: auto;">X</button>
+
 
       </div>
-
-      
+   
            <!-- Τα τραγούδια της λίστας συνδεδεμένα με τον μηχανισμό on-demand -->
       <div style="display: flex; flex-direction: column; gap: 8px;">
         <button id="playlist-item-0" onclick="playOnDemand(0)" style="background: #1e2530; color: #fff; border: 1px solid #2c3545; padding: 10px; border-radius: 6px; text-align: left; cursor: pointer; font-size: 13px; font-weight: bold; width: 100%; transition: background 0.2s;">🎵 Τραγούδι 1 - Καλλιτέχνης 1 (MP3)</button>
@@ -469,9 +467,7 @@
         <div style="position: absolute; right: 40px; display: flex; gap: 5px; align-items: center; justify-content: center; min-height: 50px; z-index: 15;">
           <!-- 1ο: Ηλεκτρικό Μπλε (Cyber Ocean) -->
           <button onclick="changePlayerTheme('linear-gradient(135deg, #000c26 0%, #001a4d 100%)', 'linear-gradient(145deg, #00f0ff 0%, #0044ff 60%, #0000cc 100%)')" title="Cyber Ocean" style="background: linear-gradient(135deg, #00f0ff, #0044ff); border: 1px solid #ffffff; width: 15px; height: 15px; border-radius: 50%; cursor: pointer; padding: 0; transition: transform 0.2s; box-shadow: 0 0 6px rgba(0, 68, 255, 0.6);"></button>
-          
-          
-          
+                              
           <!-- 3ο: Βαθύ Μωβ (Neon Purple) -->
           <button onclick="changePlayerTheme('linear-gradient(135deg, #14001a 0%, #290033 100%)', 'linear-gradient(145deg, #e000ff 0%, #8800ff 60%, #4b0099 100%)')" title="Neon Purple" style="background: linear-gradient(135deg, #e000ff, #8800ff); border: 1px solid #ffffff; width: 15px; height: 15px; border-radius: 50%; cursor: pointer; padding: 0; transition: transform 0.2s; box-shadow: 0 0 6px rgba(136, 0, 255, 0.6);"></button>
           
@@ -625,8 +621,6 @@
       }
     });
 
-
-
     loadTrack(0);
 
        // 💬 Εναλλαγή Οθόνης Chat με έλεγχο Opacity για να μην πέφτει μαύρο στο Live Βίντεο!
@@ -730,11 +724,12 @@
     }
 
 
-       // ⚡ On-Demand Αναπαραγωγή (Διορθωμένη για MP3, MP4 και σταθερό Chat)
+          // ⚡ On-Demand Αναπαραγωγή: ΜΕ 100% NEON ΦΩΤΙΣΜΟ ΚΑΙ ΣΥΓΧΡΟΝΙΣΜΟ ΜΠΑΡΑΣ ΣΤΟ ΜΑΞ!
     function playOnDemand(index) {
         const track = onDemandTracks[index];
         if (!track) return;
-        // 🌟 ΦΩΤΙΣΜΟΣ ENERGY: Καθαρίζει όλα τα κουμπιά και βάφει Neon αυτό που παίζει!
+
+        // 🌟 Α) ΦΩΤΙΣΜΟΣ ENERGY: Διατηρεί το Neon χρώμα στο κομμάτι που παίζει!
         for (let i = 0; i < onDemandTracks.length; i++) {
             const btn = document.getElementById(`playlist-item-${i}`);
             if (btn) {
@@ -752,12 +747,12 @@
             activeBtn.style.boxShadow = "0 0 10px rgba(0, 255, 204, 0.4)";
         }
 
+        // Β) ΕΚΤΕΛΕΣΗ ΑΝΑΠΑΡΑΓΩΓΗΣ & ΣΥΓΧΡΟΝΙΣΜΟΣ ΗΧΟΥ
         audio.pause(); audio.src = ""; isPlaying = false;
         playIcon.className = "fas fa-play";
         document.getElementById('song-title').innerText = track.title;
         document.getElementById('artist-name').innerText = track.artist;
 
-        // 🔥 ΚΛΕΙΔΙ: Αποσυνδέουμε πλήρως το HLS για να μπορέσει να παίξει το MP4 βίντεο!
         if (hls) { hls.detachMedia(); }
         const coverBox = document.getElementById('mp3-cover-box');
 
@@ -775,9 +770,17 @@
             videoElement.style.display = 'block';
             videoElement.src = track.fileUrl; 
             videoElement.load(); 
+            
+            // 🔥 ΚΛΕΙΔΙ: Το βίντεο ξεκινάει με ήχο κανονικά στο ΜΑΞ!
             videoElement.muted = false;
-            videoElement.play().catch(e => console.log(e));
+            videoElement.volume = 1.0;
             document.getElementById('video-mute-icon').className = "fas fa-volume-up";
+            
+            // 🔥 ΚΛΕΙΔΙ: Σπρώχνουμε και την όρθια μπάρα οπτικά στο τέρμα (1.0) για να συμφωνεί!
+            const videoVolBar = document.getElementById('video-volume-bar');
+            if (videoVolBar) videoVolBar.value = 1.0;
+
+            videoElement.play().catch(e => console.log(e));
             videoElement.addEventListener('ended', returnToLiveStream, { once: true });
           }
         }
@@ -785,21 +788,8 @@
         const playlistPanel = document.getElementById('embedded-playlist');
         if (playlistPanel) playlistPanel.style.display = 'none';
 
-        // 🔓 Εξασφάλιση ότι το Chat είναι μόνιμα έτοιμο να ανοίξει πάνω από το κομμάτι!
         const chatFrame = document.getElementById('embedded-chat');
         if (chatFrame) chatFrame.style.display = 'block';
-    }
-
-
-            function closePlaylistAndReturn() {
-      const playlistPanel = document.getElementById('embedded-playlist');
-      const chatFrame = document.getElementById('embedded-chat');
-      
-      if (playlistPanel) playlistPanel.style.display = 'none';
-      if (videoElement) videoElement.style.display = 'block';
-      
-      // 🔥 ΚΛΕΙΔΙ: Επαναφέρουμε την υποδομή του Chat όταν πατάμε το "Χ"
-      if (chatFrame) chatFrame.style.display = 'block';
     }
 
         // 🌟 Καθαρισμός του Neon φωτισμού της λίστας κατά την επιστροφή στο Live
@@ -841,9 +831,6 @@
         playIcon.className = "fas fa-pause";
         isPlaying = true;
     }
-
-
-
 
     function copyRadioLink() {
       const currentLink = window.location.href;
@@ -907,6 +894,30 @@
             });
         }
     });
+    // 🔄 ΟΛΟΚΑΙΝΟΥΡΓΙΑ ΣΥΝΑΡΤΗΣΗ ΓΙΑ ΤΟ ΚΟΥΜΠΙ "Χ" - ΚΛΕΙΝΕΙ ΑΚΑΡΙΑΙΑ ΤΗ ΛΙΣΤΑ!
+    function closePlaylistAndReturn() {
+        const playlistPanel = document.getElementById('embedded-playlist');
+        const chatFrame = document.getElementById('embedded-chat');
+        
+        // 🔓 Κλείνουμε το παράθυρο της λίστας
+        if (playlistPanel) {
+            playlistPanel.style.display = 'none';
+        }
+        
+        // 📺 Επαναφέρουμε το Βίντεο και το Chat στην επιφάνεια
+        if (videoElement) {
+            videoElement.style.display = 'block';
+        }
+        if (chatFrame) {
+            chatFrame.style.display = 'block';
+        }
+    }
+
+    // Για ασφάλεια, αν η HTML καλέσει το όνομα closePlaylist, εκτελείται η ίδια λειτουργία
+    function closePlaylist() {
+        closePlaylistAndReturn();
+    }
+
 </script>
  <script>
   function disableselect(e){

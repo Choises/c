@@ -782,7 +782,16 @@
         if (chatFrame) chatFrame.style.display = 'block';
     }
 
-
+function closePlaylistAndReturn() {
+      const playlistPanel = document.getElementById('embedded-playlist');
+      const chatFrame = document.getElementById('embedded-chat');
+      
+      if (playlistPanel) playlistPanel.style.display = 'none';
+      if (videoElement) videoElement.style.display = 'block';
+      
+      // 🔥 ΚΛΕΙΔΙ: Επαναφέρουμε την υποδομή του Chat όταν πατάμε το "Χ"
+      if (chatFrame) chatFrame.style.display = 'block';
+    }
         // 🌟 Καθαρισμός του Neon φωτισμού της λίστας κατά την επιστροφή στο Live
         for (let i = 0; i < onDemandTracks.length; i++) {
             const btn = document.getElementById(`playlist-item-${i}`);

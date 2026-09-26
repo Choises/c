@@ -728,11 +728,30 @@
     }
 
 
-           // ⚡ On-Demand Αναπαραγωγή (Με Απόλυτο Συγχρονισμό της Όρθιας Μπάρας Volume!)
+              // ⚡ On-Demand Αναπαραγωγή: ΜΕ 100% NEON ΦΩΤΙΣΜΟ ΚΑΙ ΕΞΥΠΝΟ ΣΥΓΧΡΟΝΙΣΜΟ ΜΠΑΡΑΣ!
     function playOnDemand(index) {
         const track = onDemandTracks[index];
         if (!track) return;
 
+        // 🌟 1. ΦΩΤΙΣΜΟΣ ENERGY: Καθαρίζει όλα τα κουμπιά και βάφει Neon αυτό που παίζει!
+        for (let i = 0; i < onDemandTracks.length; i++) {
+            const btn = document.getElementById(`playlist-item-${i}`);
+            if (btn) {
+                btn.style.background = "#1e2530";
+                btn.style.color = "#fff";
+                btn.style.borderColor = "#2c3545";
+                btn.style.boxShadow = "none";
+            }
+        }
+        const activeBtn = document.getElementById(`playlist-item-${index}`);
+        if (activeBtn) {
+            activeBtn.style.background = "rgba(0, 255, 204, 0.1)";
+            activeBtn.style.color = "#00ffcc";
+            activeBtn.style.borderColor = "#00ffcc";
+            activeBtn.style.boxShadow = "0 0 10px rgba(0, 255, 204, 0.4)";
+        }
+
+        // 2. ΕΚΤΕΛΕΣΗ ΑΝΑΠΑΡΑΓΩΓΗΣ & ΣΥΓΧΡΟΝΙΣΜΟΣ ΗΧΟΥ
         audio.pause(); audio.src = ""; isPlaying = false;
         playIcon.className = "fas fa-play";
         document.getElementById('song-title').innerText = track.title;
@@ -756,11 +775,11 @@
             videoElement.src = track.fileUrl; 
             videoElement.load(); 
             
-            // 🔥 ΚΛΕΙΔΙ: Διαβάζουμε live τη θέση της όρθιας μπάρας πριν ξεκινήσει το βίντεο!
+            // 🔥 Live διάβασμα της θέσης της όρθιας μπάρας για να μην ουρλιάζει το MP4!
             const videoVolBar = document.getElementById('video-volume-bar');
             const currentVol = videoVolBar ? parseFloat(videoVolBar.value) : 0;
             
-            videoElement.volume = currentVol; // Επιβάλλει την ένταση της μπάρας
+            videoElement.volume = currentVol;
             
             if (currentVol > 0) {
                 videoElement.muted = false;
@@ -782,16 +801,6 @@
         if (chatFrame) chatFrame.style.display = 'block';
     }
 
-function closePlaylistAndReturn() {
-      const playlistPanel = document.getElementById('embedded-playlist');
-      const chatFrame = document.getElementById('embedded-chat');
-      
-      if (playlistPanel) playlistPanel.style.display = 'none';
-      if (videoElement) videoElement.style.display = 'block';
-      
-      // 🔥 ΚΛΕΙΔΙ: Επαναφέρουμε την υποδομή του Chat όταν πατάμε το "Χ"
-      if (chatFrame) chatFrame.style.display = 'block';
-    }
         // 🌟 Καθαρισμός του Neon φωτισμού της λίστας κατά την επιστροφή στο Live
         for (let i = 0; i < onDemandTracks.length; i++) {
             const btn = document.getElementById(`playlist-item-${i}`);

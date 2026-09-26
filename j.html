@@ -6,7 +6,7 @@
   <meta property="og:title" content="📻 Panagiotis Live Radio Player">
   <meta property="og:description" content="Ακούστε ζωντανά την καλύτερη μουσική με live chat και video clip!">
   <meta property="og:image" content="https://xatimg.com/image/3Hzrpugf7ede.png"> <!-- 📸 ΕΔΩ ΒΑΖΕΤΕ ΤΟ LINK ΤΗΣ ΦΩΤΟΓΡΑΦΙΑΣ ΠΟΥ ΘΕΛΕΤΕ ΝΑ ΕΜΦΑΝΙΖΕΤΑΙ -->
-  <meta property="og:url" content="https://panos316radio.blogspot.com/">
+  <meta property="og:url" content="https://choices5.blogspot.com/">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🇬🇷Panagiotis🇬🇷</title>
@@ -428,9 +428,8 @@
            <!-- Ο ΤΙΤΛΟΣ ΜΑΖΙ ΜΕ ΤΟ ΚΟΚΚΙΝΟ ΚΟΥΜΠΙ ΚΛΕΙΣΙΜΑΤΟΣ (X) -->
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2c3545; padding-bottom: 5px; margin-bottom: 15px;">
         <span style="color: #00ffcc; font-size: 16px; font-weight: bold;">🎵 Λίστα Τραγουδιών</span>
-                <button onclick="closePlaylist()" style="background: #c0392b; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; position: relative; z-index: 100001; pointer-events: auto;">X</button>
+        <button onclick="closePlaylistAndReturn()" style="background: #c0392b; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;">X</button>
 
-          
       </div>
 
       
@@ -729,12 +728,11 @@
     }
 
 
-                  // ⚡ On-Demand Αναπαραγωγή: ΜΕ 100% NEON ΦΩΤΙΣΜΟ ΚΑΙ ΕΞΥΠΝΟ ΣΥΓΧΡΟΝΙΣΜΟ ΜΠΑΡΑΣ!
+       // ⚡ On-Demand Αναπαραγωγή (Διορθωμένη για MP3, MP4 και σταθερό Chat)
     function playOnDemand(index) {
         const track = onDemandTracks[index];
         if (!track) return;
-
-        // 🌟 1. ΦΩΤΙΣΜΟΣ ENERGY: Καθαρίζει όλα τα κουμπιά και βάφει Neon αυτό που παίζει!
+        // 🌟 ΦΩΤΙΣΜΟΣ ENERGY: Καθαρίζει όλα τα κουμπιά και βάφει Neon αυτό που παίζει!
         for (let i = 0; i < onDemandTracks.length; i++) {
             const btn = document.getElementById(`playlist-item-${i}`);
             if (btn) {
@@ -752,12 +750,12 @@
             activeBtn.style.boxShadow = "0 0 10px rgba(0, 255, 204, 0.4)";
         }
 
-        // 2. ΕΚΤΕΛΕΣΗ ΑΝΑΠΑΡΑΓΩΓΗΣ & ΣΥΓΧΡΟΝΙΣΜΟΣ ΗΧΟΥ
         audio.pause(); audio.src = ""; isPlaying = false;
         playIcon.className = "fas fa-play";
         document.getElementById('song-title').innerText = track.title;
         document.getElementById('artist-name').innerText = track.artist;
 
+        // 🔥 ΚΛΕΙΔΙ: Αποσυνδέουμε πλήρως το HLS για να μπορέσει να παίξει το MP4 βίντεο!
         if (hls) { hls.detachMedia(); }
         const coverBox = document.getElementById('mp3-cover-box');
 
@@ -775,22 +773,9 @@
             videoElement.style.display = 'block';
             videoElement.src = track.fileUrl; 
             videoElement.load(); 
-            
-            // 🔥 Live διάβασμα της θέσης της όρθιας μπάρας για να μην ουρλιάζει το MP4!
-            const videoVolBar = document.getElementById('video-volume-bar');
-            const currentVol = videoVolBar ? parseFloat(videoVolBar.value) : 0;
-            
-            videoElement.volume = currentVol;
-            
-            if (currentVol > 0) {
-                videoElement.muted = false;
-                document.getElementById('video-mute-icon').className = "fas fa-volume-up";
-            } else {
-                videoElement.muted = true;
-                document.getElementById('video-mute-icon').className = "fas fa-volume-mute";
-            }
-
+            videoElement.muted = false;
             videoElement.play().catch(e => console.log(e));
+            document.getElementById('video-mute-icon').className = "fas fa-volume-up";
             videoElement.addEventListener('ended', returnToLiveStream, { once: true });
           }
         }
@@ -798,8 +783,21 @@
         const playlistPanel = document.getElementById('embedded-playlist');
         if (playlistPanel) playlistPanel.style.display = 'none';
 
+        // 🔓 Εξασφάλιση ότι το Chat είναι μόνιμα έτοιμο να ανοίξει πάνω από το κομμάτι!
         const chatFrame = document.getElementById('embedded-chat');
         if (chatFrame) chatFrame.style.display = 'block';
+    }
+
+
+            function closePlaylistAndReturn() {
+      const playlistPanel = document.getElementById('embedded-playlist');
+      const chatFrame = document.getElementById('embedded-chat');
+      
+      if (playlistPanel) playlistPanel.style.display = 'none';
+      if (videoElement) videoElement.style.display = 'block';
+      
+      // 🔥 ΚΛΕΙΔΙ: Επαναφέρουμε την υποδομή του Chat όταν πατάμε το "Χ"
+      if (chatFrame) chatFrame.style.display = 'block';
     }
 
         // 🌟 Καθαρισμός του Neon φωτισμού της λίστας κατά την επιστροφή στο Live
